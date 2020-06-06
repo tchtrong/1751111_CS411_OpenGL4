@@ -29,7 +29,7 @@ private:
 
 	void init_vertex_buffer() {
 		// Calculate vertices buffer
-		glm::vec4 top{ 0.0f, 0.5f, 0.0f, 1.0f };
+		glm::vec4 top{ 0.0f, 0.35f, 0.0f, 1.0f };
 		glm::mat4 identity{ 1.0f };
 		for (int i = 0; i < vertical + 1; ++i) {			
 			if (!i) {
@@ -63,31 +63,35 @@ private:
 		//Calculate indices buffer
 		indices.reserve(num_indices);
 
-		for (int i = 0, k1 = 0, k2 = 0; i < vertical; ++i)
-		{
-			k1 = i * horizontal + 1;     // beginning of current stack
-			k2 = k1 + horizontal;      // beginning of next stack
-
-			for (int j = 0; j < horizontal; ++j, ++k1, ++k2)
-			{
-				// 2 triangles per sector excluding first and last stacks
-				// k1 => k2 => k1+1
-				if (i != 0)
-				{
+		for (int i = 0, k1 = 0, k2 = 0; i < vertical; ++i) {
+			if (!i) {
+				k1 = 0;
+				k2 = 1;
+			}
+			else {
+				k1 = (i - 1) * horizontal + 1;
+				k2 = k1 + horizontal;
+			}
+			bool not_zero = i;
+			bool not_last = !(i == vertical - 1);
+			for (int j = 0; j < horizontal; ++j) {
+				if (not_last) {
 					indices.push_back(k1);
 					indices.push_back(k2);
-					indices.push_back(k1 + 1);
+					indices.push_back(k2 + 1 - horizontal * bool(j == horizontal - 1));
 				}
 
-				// k1+1 => k2 => k2+1
-				if (i != (vertical - 1))
-				{
-					indices.push_back(k1 + 1);
-					indices.push_back(k2);
-					indices.push_back(k2 + 1);
+				if (not_zero) {
+					indices.push_back(k1 + 1 - horizontal * bool(j == horizontal - 1));
+					indices.push_back(k1);
+					indices.push_back(k2 + not_last - horizontal * bool(j == horizontal - 1));
 				}
+
+				k1 += not_zero;
+				k2 += not_last;
 			}
 		}
+		indices.back() = num_vertices - 1;
 
 		glCreateBuffers(1, &index_buffer);
 		glNamedBufferStorage(index_buffer, sizeof(GLuint) * indices.size(), indices.data(), GL_MAP_READ_BIT);
@@ -108,8 +112,8 @@ private:
 
 	static constexpr inline glm::vec3 y_axis = { 0.0f, 1.0f, 0.0f };
 	static constexpr inline glm::vec3 x_axis = { 1.0f, 0.0f, 0.0f };
-	static constexpr inline int horizontal = 4;
-	static constexpr inline int vertical = 3;
+	static constexpr inline int horizontal = 40;
+	static constexpr inline int vertical = 20;
 	static constexpr inline int num_vertices = horizontal * (vertical - 1) + 2;
 	static constexpr inline int num_indices = horizontal * vertical * 3;
 	static constexpr inline float hrz_angle = glm::radians(360 / float(horizontal));

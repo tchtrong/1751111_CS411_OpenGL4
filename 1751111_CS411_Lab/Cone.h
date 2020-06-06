@@ -31,7 +31,7 @@ private:
 	void init_vertex_buffer() {
 		// Calculate vertices buffer
 		static constexpr glm::mat4 identity(1.0f);
-		glm::vec4 start{ 0.5f, 0.0f, 0.0f, 1.0f };
+		glm::vec4 start{ 0.35f, 0.60f, 0.0f, 1.0f };
 		for (int i = 0; i < edges; ++i) {
 			if (i > 0) {
 				start = glm::rotate(identity, incr_angle, axis) * start;
@@ -97,8 +97,8 @@ private:
 		glEnableVertexArrayAttrib(vao, 0);
 	}
 
-	glm::vec4 top{ 0.0f, 1.0f, 0.0f, 1.0f };
-	glm::vec4 center{ 0.0f, 0.0f, 0.0f, 1.0f };
+	glm::vec4 top{ 0.0f, 1.25f, 0.0f, 1.0f };
+	glm::vec4 center{ 0.0f, 1.0f, 0.0f, 1.0f };
 	static constexpr inline glm::vec3 axis = { 0.0f, 1.0f, 0.0f };
 	static constexpr inline int edges = 40;
 	static constexpr inline float incr_angle = glm::radians(360 / float(edges));

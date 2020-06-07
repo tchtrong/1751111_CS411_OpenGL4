@@ -31,24 +31,25 @@ private:
 		// Calculate vertices buffer
 		glm::vec4 top{ 0.0f, 0.35f, 0.0f, 1.0f };
 		glm::mat4 identity{ 1.0f };
+		glm::mat4 matrix = glm::translate(identity, glm::vec3(0.0f, -1.0f, 0.0f));
 		for (int i = 0; i < vertical + 1; ++i) {			
 			if (!i) {
-				vertices[i] = top;
+				vertices[i] = matrix * top;
 			}
 			else {
 				top = glm::rotate(identity, vtc_angle, x_axis) * top;
 				if (i == vertical) {
-					vertices[num_vertices - 1] = top;
+					vertices[num_vertices - 1] = matrix * top;
 				}
 				else {
 					int index = (i - 1) * horizontal + 1;
 					for (int j = 0; j < horizontal; ++j) {
 						if (j == 0) {
-							vertices[index] = top;
+							vertices[index] = matrix * top;
 						}
 						else {
 							top = glm::rotate(identity, hrz_angle, y_axis) * top;
-							vertices[index + j] = top;
+							vertices[index + j] = matrix * top;
 						}
 					}
 					top = glm::rotate(identity, hrz_angle, y_axis) * top;

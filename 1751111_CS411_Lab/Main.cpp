@@ -8,6 +8,7 @@
 #include "Cube.h"
 #include "Cone.h"
 #include "Sphere.h"
+#include "Ring.h"
 
 int main(void)
 {
@@ -99,6 +100,8 @@ int main(void)
 
     Shpere c;
 
+    Ring d;
+
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
@@ -127,12 +130,8 @@ int main(void)
 
         glEnable(GL_CULL_FACE);
         a.render();
-        
-        glm::mat4 sp_mv_matrix =
-            glm::translate(glm::mat4(1.0f), glm::vec3(0.75f, 0.0f, 0.0f)) *
-            mv_matrix;
-        glUniformMatrix4fv(mv_location, 1, GL_FALSE, &sp_mv_matrix[0][0]);
         c.render();
+        d.render();
 
         glDisable(GL_CULL_FACE);
         glUniformMatrix4fv(mv_location, 1, GL_FALSE, &mv_matrix[0][0]);

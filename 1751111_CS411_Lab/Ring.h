@@ -22,7 +22,7 @@ public:
 
 	void render() {
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data());
+		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, indices.data());
 	}
 
 private:
@@ -51,7 +51,7 @@ private:
 
 	void init_index_buffer() {
 		//Calculate indices buffer
-
+		indices.reserve(num_indices);
 		for (int i = 0; i < m_segments; ++i) {
 			int k1 = i * t_segments;					//begining index
 			int k2 = (k1 + t_segments) % num_vertices;	//begining of first index of next m_segment			
@@ -94,7 +94,7 @@ private:
 	static constexpr inline int m_segments = 40;
 	static constexpr inline int t_segments = 20;
 	static constexpr inline int num_vertices = m_segments * t_segments;
-	static constexpr inline int num_indices = 0;
+	static constexpr inline int num_indices = num_vertices * 2 * 3;
 	static constexpr inline float m_angle = glm::radians(360 / float(m_segments));
 	static constexpr inline float t_angle = glm::radians(360 / float(t_segments));
 

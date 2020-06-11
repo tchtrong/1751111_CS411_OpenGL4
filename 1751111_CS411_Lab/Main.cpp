@@ -10,6 +10,9 @@
 #include "Sphere.h"
 #include "Ring.h"
 
+constexpr int window_width = 800;
+constexpr int window_height = 640;
+
 int main(void)
 {
     GLFWwindow* window;
@@ -19,7 +22,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(window_width, window_height, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -35,44 +38,13 @@ int main(void)
     }
 
     Program program;
-
     program.add_shader("vertex.glsl", GL_VERTEX_SHADER);
     program.add_shader("fragment.glsl", GL_FRAGMENT_SHADER);
-
     program.link_program();
-
     program.use_program();
 
     GLint mv_location = glGetUniformLocation(program.get_id(), "mv_matrix");
     GLint proj_location = glGetUniformLocation(program.get_id(), "proj_matrix");
-
-    static const GLushort vertex_indices[] =
-    {
-        0, 1, 2,
-        2, 1, 3,
-        2, 3, 4,
-        4, 3, 5,
-        4, 5, 6,
-        6, 5, 7,
-        6, 7, 0,
-        0, 7, 1,
-        6, 0, 2,
-        2, 4, 6,
-        7, 5, 3,
-        7, 3, 1
-    };
-
-    static const GLfloat vertex_positions[] =
-    {
-        -0.25f, -0.25f, -0.25f,
-        -0.25f,  0.25f, -0.25f,
-         0.25f, -0.25f, -0.25f,
-         0.25f,  0.25f, -0.25f,
-         0.25f, -0.25f,  0.25f,
-         0.25f,  0.25f,  0.25f,
-        -0.25f, -0.25f,  0.25f,
-        -0.25f,  0.25f,  0.25f,
-    };
 
     glEnable(GL_CULL_FACE);
     //glFrontFace(GL_CW);
@@ -83,14 +55,12 @@ int main(void)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    glm::mat4 proj_matrix = glm::perspective(50.0f,
-        (float)640 / (float)480,
-        0.01f,
-        1000.0f);
+    glm::mat4 proj_matrix =
+        glm::perspective(50.0f, (float)window_width / (float)window_height, 0.01f, 1000.0f);
 
     glUniformMatrix4fv(proj_location, 1, GL_FALSE, &proj_matrix[0][0]);
 
-    glViewport(0, 0, 640, 480);
+    glViewport(0, 0, window_width, window_height);
 
     double currentTime = glfwGetTime();
 
@@ -134,7 +104,6 @@ int main(void)
         d.render();
 
         glDisable(GL_CULL_FACE);
-        glUniformMatrix4fv(mv_location, 1, GL_FALSE, &mv_matrix[0][0]);
         b.render();
 
         /* Swap front and back buffers */
@@ -143,10 +112,6 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-
-    /*glDeleteBuffers(1, &buffer);
-    glDeleteBuffers(1, &index_buffer);
-    glDeleteVertexArrays(1, &vao);*/
 
     a.uninitialize();
     b.uninitialize();

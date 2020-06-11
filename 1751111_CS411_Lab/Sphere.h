@@ -22,7 +22,7 @@ public:
 
 	void render() {
 		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data());
+		glDrawElements(GL_TRIANGLES, int(indices.size()), GL_UNSIGNED_INT, indices.data());
 	}
 
 private:
